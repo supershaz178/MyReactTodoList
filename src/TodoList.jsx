@@ -1,17 +1,24 @@
 import List from "@mui/material/List";
 import TodoItem from "./TodoItem";
-import { useState } from "react";
+import TodoForm from "./TodoForm";
+import { useState, useEffect } from "react";
 
-const initialTodos = [
-  { id: 1, text: "Do this course", completed: false },
-  { id: 2, text: "Do homework", completed: true },
-  { id: 3, text: "Swipe and mop", completed: false },
-  { id: 4, text: "Do the dishes", completed: false },
-  { id: 5, text: "Do this course", completed: false },
-];
+const getInitialData = () => {
+    const data = JSON.parse(localStorage.getItem('todos'));
+
+    if(!data){
+        return [];
+    }
+
+    return data; 
+}
 
 export default function TodoList() {
-  const [todos, setTodos] = useState(initialTodos);
+  const [todos, setTodos] = useState(getInitialData);
+
+    useEffect(() => {
+        localStorage.setItem('todos', JSON.stringify(todos));
+    }, [todos])
 
   const removeTodo = (id) => {
     setTodos((previousTodos) => {
@@ -31,6 +38,12 @@ export default function TodoList() {
     });
   };
 
+  const addTodo = (text) => {
+    setTodos(previousTodos => {
+        return [...previousTodos, {text: text, id:crypto.randomUUID(), completed:false}]
+    })
+  }
+
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
       {todos.map((todo) => {
@@ -38,11 +51,12 @@ export default function TodoList() {
           <TodoItem
             key={todo.id}
             todo={todo}
-            remmoveTodo={() => removeTodo(todo.id)}
+            removeTodo={() => removeTodo(todo.id)}
             toggleTodo={() => toggleTodo(todo.id)}
           />
         );
       })}
+      <TodoForm addTodo={addTodo}/>
     </List>
   );
 }

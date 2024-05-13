@@ -7,13 +7,13 @@ import IconButton from '@mui/material/IconButton';
 import CommentIcon from '@mui/icons-material/Comment';
 
 
-export default function TodoItem({todo, remmoveTodo}){
+export default function TodoItem({todo, removeTodo, toggleTodo}){
     const labelId = `checkbox-list-label-${todo.id}`;
     
     return (
         <ListItem
         secondaryAction={
-          <IconButton edge="end" onClick={remmoveTodo} aria-label="comments">
+          <IconButton edge="end" onClick={removeTodo} aria-label="comments">
             <CommentIcon />
           </IconButton>
         }
@@ -27,6 +27,7 @@ export default function TodoItem({todo, remmoveTodo}){
               tabIndex={-1}
               disableRipple
               inputProps={{ 'aria-labelledby': labelId }}
+              onChange={toggleTodo}
             />
           </ListItemIcon>
           <ListItemText id={labelId} primary={todo.text} />
